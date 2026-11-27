@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Alex Lie – Lighting Designer | A+LED</title>
+<meta name="description" content="Alex Lie: Lighting Designer, Lighting Engineering, Electrical Engineering. Pemilik retail A+LED, CEO/Founder Busy Beaver Studio dan FnB Fusion.">
+<link rel="icon" type="image/png" href="images/aled-logo-flat.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#000; --panel:#0c121b; --panel2:#111a26; --line:#223045;
+  --frost:#eaf0f7; --mute:#93a4b9; --red:#ff2e3f;
+  --navy:#3347a8; --green:#1fb58f; --yellow:#f2c230; --orange:#f28a2e; --violet:#8a4fd0;
+  --spectrum:linear-gradient(90deg,var(--navy),var(--green),var(--yellow),var(--orange),var(--red),var(--violet),var(--navy));
+  --display:"Chakra Petch","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --pad:clamp(1.1rem,4vw,3.5rem);
+  --sg:linear-gradient(135deg,#f6f1e3 0%,#b8bec6 16%,#e8cc6e 34%,#fff6d6 48%,#a9afb7 62%,#d4af37 80%,#f4e6ae 100%);
+}
+*{box-sizing:border-box;margin:0}
+html{font-size:clamp(15px,.55vw + 9px,19px);overflow-x:hidden;max-width:100%;scroll-behavior:smooth;scroll-padding-top:4.5rem;background:var(--ink)}
+body{font-family:var(--body);color:var(--frost);line-height:1.65;font-size:1.02rem;position:relative;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:44px 44px;overflow-x:hidden;max-width:100%;position:relative}
+img{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--yellow);outline-offset:3px}
+.r{color:var(--red)}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.1;letter-spacing:.01em}
+
+/* AMOLED black stage + lightning */
+.stage{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:#000}
+/* lightning (petir) */
+.flash{position:absolute;inset:0;opacity:0;transition:opacity .9s ease-out;background:radial-gradient(110% 85% at var(--fx,50%) 0%,rgba(170,195,255,.55),rgba(200,210,230,.2) 50%,transparent 82%);mix-blend-mode:screen}
+.flash.on{opacity:1;transition:none}
+.bolt{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .45s ease-out;mix-blend-mode:screen;overflow:visible;filter:drop-shadow(0 0 3px #cfdcff) drop-shadow(0 0 10px #6f93ff) drop-shadow(0 0 26px #3f5fe0)}
+.bolt.on{opacity:1;transition:none}
+.bolt polyline{fill:none;stroke:#f2f6ff;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.bolt .main{stroke-width:3.2}.bolt .br{stroke-width:1.8;opacity:.85}
+
+
+/* proteksi konten: tanpa klik kanan, seleksi, drag, dan cetak */
+html,body{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+img,svg,video{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none}
+img{pointer-events:none}
+@media print{html,body{display:none!important}}
+
+/* header */
+@media(min-width:641px) and (max-width:1100px){.top .brand{font-size:.9rem}.top nav a{font-size:.85rem;white-space:nowrap}.top nav ul{gap:.9rem;flex-wrap:nowrap}}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.55rem var(--pad);background:rgba(5,7,12,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.01em}
+.top .brand img{height:42px;width:auto}
+.top nav ul{display:flex;gap:clamp(.6rem,1.8vw,1.6rem);list-style:none;padding:0;flex-wrap:wrap;justify-content:flex-end}
+.top nav a{text-decoration:none;font-family:var(--display);font-weight:500;font-size:.95rem;color:var(--mute);padding:.3rem 0;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
+.top nav a:hover{color:var(--frost);border-color:var(--red)}
+
+/* hero */
+.hero{position:relative;min-height:calc(100svh - 4rem);display:grid;align-content:center;gap:2rem;padding:clamp(2rem,6vw,5rem) var(--pad);overflow:hidden;isolation:isolate}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;z-index:-3}
+.hero .beam{position:absolute;inset:0;z-index:-2;pointer-events:none;
+  background:radial-gradient(420px circle at var(--mx,70%) var(--my,30%),rgba(255,255,255,.14),transparent 62%)}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 4px)}
+.hud{position:absolute;width:34px;height:34px;border:2px solid var(--line);pointer-events:none}
+.hud.tl{top:1rem;left:1rem;border-right:0;border-bottom:0}
+.hud.tr{top:1rem;right:1rem;border-left:0;border-bottom:0}
+.hud.bl{bottom:1rem;left:1rem;border-right:0;border-top:0}
+.hud.br{bottom:1rem;right:1rem;border-left:0;border-top:0}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(1.5rem,4vw,4rem);align-items:center}
+.hero .logo-big{justify-self:center;width:min(640px,86vw);height:auto;margin:0 auto;filter:drop-shadow(0 6px 0 rgba(20,30,60,.7)) drop-shadow(0 22px 24px rgba(0,0,0,.7)) drop-shadow(0 0 34px rgba(111,147,255,.28))}
+.hero h1{font-size:clamp(3.4rem,11vw,9rem);font-weight:700;letter-spacing:-.01em;margin:.4rem 0 .2rem}
+.hero .by{font-family:var(--display);font-size:clamp(1.1rem,2.2vw,1.6rem);color:var(--mute)}
+.hero .lede{max-width:34rem;margin-top:1.2rem;color:var(--frost)}
+.hero .support{display:flex;align-items:center;gap:1rem;margin-top:2rem;font-family:var(--display);color:var(--mute);font-size:1.15rem}
+.hero .support img{width:120px;height:auto}
+.hero-photo{position:relative;border:3px solid;border-image:var(--sg) 1;background:var(--panel);box-shadow:0 0 28px rgba(214,185,100,.14)}
+.hero-photo img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.hero-photo figcaption{padding:.6rem .9rem;font-size:.9rem;color:var(--mute);border-top:1px solid rgba(214,185,100,.4)}
+.lightline{height:7px;width:0;background:var(--spectrum);background-size:300% 100%;box-shadow:0 0 22px 2px rgba(242,138,46,.45);
+  animation:draw 1.8s cubic-bezier(.7,0,.2,1) .2s forwards,flow 14s linear 2s infinite;-webkit-mask:repeating-linear-gradient(90deg,#000 0 14px,transparent 14px 17px);mask:repeating-linear-gradient(90deg,#000 0 14px,transparent 14px 17px)}
+@keyframes draw{to{width:100%}}
+@keyframes flow{to{background-position:300% 0}}
+
+/* sections */
+section{padding:clamp(3.5rem,8vw,7rem) var(--pad)}
+.sec-head{max-width:60rem;margin-bottom:clamp(1.8rem,4vw,3rem)}
+.sec-head h2{font-size:clamp(2rem,5vw,3.6rem)}
+.sec-head p{color:var(--mute);margin-top:.8rem}
+.panel{background:var(--panel);border:1px solid var(--line);position:relative}
+.panel::before,.panel::after{content:"";position:absolute;width:14px;height:14px;border:2px solid var(--red);pointer-events:none}
+.panel::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.panel::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+
+/* profil */
+.profile{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(1.5rem,4vw,4rem);align-items:start}
+.profile .name{font-size:clamp(2.6rem,7vw,5.5rem);font-weight:700}
+.profile .roles{font-family:var(--display);font-size:clamp(1.2rem,2.4vw,1.7rem);margin:.8rem 0 0;font-weight:500}
+.profile .roles small{font-size:.62em;color:var(--mute);font-weight:400}
+.profile h3{font-size:1.5rem;margin:2rem 0 .6rem;color:var(--mute);font-weight:500}
+.profile ul{list-style:none;padding:0;display:grid;gap:.25rem}
+.profile ul li::before{content:"";display:inline-block;width:9px;height:9px;margin-right:.7rem;background:var(--red);transform:rotate(45deg) scale(.8)}
+.biz{display:grid;grid-template-columns:max-content 1fr;gap:.35rem 1.2rem;margin-top:2rem;font-size:1.15rem}
+.biz dt{color:var(--mute)}
+.biz dd{font-family:var(--display);font-size:1.35rem}
+.ext{display:inline-grid;place-items:center;width:36px;height:36px;margin-left:.5rem;vertical-align:middle;color:var(--mute);transition:color .2s,transform .2s}
+.ext svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ext:hover,.ext:focus-visible{color:var(--yellow);transform:translate(2px,-2px)}
+.since{margin-top:1.8rem;color:var(--mute);font-family:var(--display)}
+.portrait{width:min(100%,380px);justify-self:end;align-self:start;position:relative;isolation:isolate;padding:5px;background:var(--sg);
+  box-shadow:0 0 0 1px #4d3d12,0 22px 46px rgba(0,0,0,.65),0 0 60px 6px rgba(214,185,100,.24)}
+.portrait .mat{background:#06080d;padding:12px 12px 0;outline:1px solid rgba(232,204,110,.55);outline-offset:-7px}
+.portrait .pic{position:relative;overflow:hidden;border:1px solid rgba(232,204,110,.6)}
+.portrait .pic img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:50% 8%;filter:grayscale(1) contrast(1.12) brightness(.93)}
+.portrait .pic::before{content:"";position:absolute;inset:0;background:linear-gradient(155deg,rgba(255,206,110,.34),transparent 55%);mix-blend-mode:soft-light;pointer-events:none}
+.portrait .pic::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 75% 70% at 50% 38%,transparent 42%,rgba(5,7,12,.72) 100%),linear-gradient(180deg,transparent 70%,rgba(5,7,12,.7));pointer-events:none}
+.portrait figcaption{padding:.75rem 0 .85rem;text-align:center;font-family:var(--display);font-weight:600;font-size:1.35rem;letter-spacing:.04em}
+.portrait figcaption span{background:var(--sg);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* galleries */
+.gallery{--gap:.9rem;list-style:none;padding:0;display:grid;gap:var(--gap);grid-template-columns:repeat(2,minmax(0,1fr))}
+.gallery li{min-width:0}
+.gallery.wide{grid-template-columns:repeat(4,minmax(0,1fr))}
+/* proyek: 3 kolom, baris terakhir selalu penuh */
+.project .gallery{grid-template-columns:repeat(6,minmax(0,1fr))}
+.project .gallery li{grid-column:span 2}
+.project .gallery li:last-child:nth-child(3n+1){grid-column:span 6;--ar:21/9}
+.project .gallery li:last-child:nth-child(3n+2),.project .gallery li:nth-last-child(2):nth-child(3n+1){grid-column:span 3;--ar:16/10}
+/* keahlian: 2 kolom, foto ganjil terakhir selebar penuh */
+.disc .gallery li:last-child:nth-child(odd){grid-column:1/-1;--ar:21/9}
+/* toko: foto pertama lebar supaya tinggi kedua kartu seimbang */
+.duo .panel:first-child .gallery li:first-child{grid-column:1/-1;--ar:129/100}
+.shot{display:block;width:100%;padding:6px;border:3px solid;border-image:var(--sg) 1;background:var(--panel2);cursor:zoom-in;position:relative;transition:border-color .25s,box-shadow .25s}
+.shot::before,.shot::after{content:"";position:absolute;width:12px;height:12px;border:2px solid #fff1bd;pointer-events:none;opacity:0;transition:opacity .25s}
+.shot::before{top:-3px;left:-3px;border-right:0;border-bottom:0}
+.shot::after{bottom:-3px;right:-3px;border-left:0;border-top:0}
+.shot .frame{display:block;overflow:hidden;border:1px solid rgba(214,185,100,.4)}
+.shot img{width:100%;aspect-ratio:var(--ar,4/3);object-fit:cover;filter:brightness(.66) saturate(.9);transition:filter .35s,transform .5s}
+.shot:hover,.shot:focus-visible{box-shadow:0 0 20px rgba(232,204,110,.38)}
+.shot:hover::before,.shot:hover::after,.shot:focus-visible::before,.shot:focus-visible::after{opacity:1}
+.shot:hover img,.shot:focus-visible img{filter:brightness(1.08) saturate(1.1);transform:scale(1.04)}
+
+/* toko & workshop */
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1rem,3vw,2.5rem)}
+.duo .panel{padding:clamp(1rem,2.4vw,1.8rem)}
+.duo h3{font-size:1.6rem;margin-bottom:.6rem}
+.duo address{font-style:normal;color:var(--frost);margin-bottom:1.2rem}
+
+/* disciplines */
+.disc{margin-bottom:clamp(2.5rem,6vw,5rem)}
+.disc:last-child{margin-bottom:0}
+.disc header{max-width:62rem;margin-bottom:1.6rem}
+.disc h3{font-size:clamp(2rem,4.6vw,3.4rem);font-weight:500}
+.disc .def{margin-top:.8rem;font-size:1.1rem;color:var(--frost)}
+.disc-body{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(1.2rem,3vw,2.5rem);align-items:start}
+.aspects{background:var(--panel);border:1px solid var(--line);padding:1.3rem 1.4rem;position:sticky;top:5.5rem}
+.aspects>p{font-family:var(--display);font-size:1.2rem;margin-bottom:.8rem;color:var(--mute)}
+.aspects ul{list-style:none;padding:0;display:grid;gap:.9rem}
+.aspects li{padding-left:1.1rem;border-left:2px solid var(--red)}
+.aspects strong{font-family:var(--display);font-weight:600}
+
+/* projects */
+#proyek{background:linear-gradient(180deg,transparent,rgba(255,255,255,.03) 12%,rgba(255,255,255,.03) 88%,transparent)}
+.project{display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1.38fr);gap:clamp(1.2rem,3vw,2.8rem);padding:clamp(1.6rem,4vw,3rem) 0;border-top:1px solid var(--line);align-items:start}
+.project:first-of-type{border-top:0}
+.spec{position:sticky;top:5.5rem}
+.spec h3{font-size:clamp(1.6rem,3vw,2.3rem)}
+.spec .where{color:var(--mute);margin-top:.35rem}
+.spec .year{font-family:var(--display);font-size:2.6rem;font-weight:700;margin:.4rem 0 1rem;background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent;width:max-content}
+.spec dl{display:grid;gap:.25rem;border-left:2px solid var(--red);padding-left:1rem}
+.spec dt{font-family:var(--display);color:var(--mute);font-size:.95rem;margin-top:.7rem}
+.spec dt:first-child{margin-top:0}
+.spec dd ul{list-style:none;padding:0;display:grid;gap:.3rem}
+.spec .scope{margin-top:1.1rem;font-family:var(--display);font-size:1.1rem}
+
+
+/* glass card: Aspek mencakup, Kenapa Memilih Kami, Portofolio, Alamat Toko & Workshop */
+.aspects,.why .panel,.duo .panel{
+  background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
+  -webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);
+  border:1px solid rgba(255,255,255,.28);border-radius:16px;
+  box-shadow:0 8px 32px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.35),inset 0 -1px 0 rgba(255,255,255,.06);
+}
+.why .panel::before,.why .panel::after,.duo .panel::before,.duo .panel::after{display:none}
+.aspects>p{color:var(--frost)}
+/* kenapa */
+.why{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.why .panel{padding:1.4rem;height:100%}
+.why h3{font-size:1.35rem;margin-bottom:.5rem}
+@media(min-width:1001px) and (max-width:1320px){.why h3{min-height:2.2em}.why .wide h3{min-height:0}}
+.why p{color:var(--frost)}
+.why .wide{grid-column:1/-1}
+
+/* kontak */
+.contact{text-align:center;display:grid;justify-items:center;gap:1.6rem;padding-bottom:5rem;perspective:1100px}
+.contact>img{filter:drop-shadow(0 4px 0 rgba(20,30,60,.9)) drop-shadow(0 18px 16px rgba(0,0,0,.75)) drop-shadow(0 0 26px rgba(111,147,255,.35));animation:floaty 6s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0) rotateY(-8deg)}50%{transform:translateY(-10px) rotateY(8deg)}}
+.contact h2{font-size:clamp(2.6rem,8vw,6rem);font-weight:700;color:#f3f7ff;transform:rotateX(14deg);transform-origin:50% 100%;
+  text-shadow:0 1px 0 #dfe6f2,0 2px 0 #bcc8da,0 3px 0 #9aa9c0,0 4px 0 #7b8ba6,0 5px 0 #5f6f8c,0 6px 0 #46557a,0 7px 0 #34416a,0 9px 8px rgba(0,0,0,.65),0 18px 26px rgba(0,0,0,.7),0 0 30px rgba(111,147,255,.25)}
+.contact .cta-line{font-family:var(--display);font-size:clamp(1.1rem,2.4vw,1.7rem);text-shadow:0 1px 0 #6d7a92,0 2px 0 #404a5e,0 5px 8px rgba(0,0,0,.8)}
+.contact .person{width:min(100%,30rem);display:grid;gap:1.1rem;padding:1.6rem 1.5rem 1.9rem;border-radius:22px;transform-style:preserve-3d;
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .25s ease-out;
+  background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.28);box-shadow:0 30px 50px -10px rgba(0,0,0,.85),0 10px 0 -4px rgba(255,255,255,.05),inset 0 1px 0 rgba(255,255,255,.4)}
+.contact .cp-title{font-family:var(--display);font-size:1.15rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);transform:translateZ(20px)}
+.cbtn{display:flex;align-items:center;gap:1rem;padding:.85rem 1.1rem;border-radius:16px;text-decoration:none;text-align:left;font-family:var(--display);
+  transform:translateZ(38px);transition:transform .15s,box-shadow .15s}
+.cbtn .ico{flex:0 0 auto;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.2);
+  box-shadow:inset 0 2px 3px rgba(255,255,255,.5),inset 0 -3px 5px rgba(0,0,0,.25),0 3px 6px rgba(0,0,0,.35)}
+.cbtn .ico svg{width:30px;height:30px;fill:currentColor;filter:drop-shadow(0 2px 1px rgba(0,0,0,.35))}
+.cbtn small{display:block;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;opacity:.85;font-family:var(--body)}
+.cbtn b{display:block;font-weight:600;font-size:clamp(1.05rem,4.6vw,1.45rem);line-height:1.2;overflow-wrap:anywhere}
+.cbtn.wa{color:#fff;background:linear-gradient(180deg,#4df07f 0%,#25c457 48%,#1a9a43 100%);
+  box-shadow:0 7px 0 #0d6a2b,0 16px 22px rgba(0,0,0,.6),0 0 24px rgba(37,211,102,.35),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 4px rgba(0,0,0,.2)}
+.cbtn.mail{color:#0b1220;background:linear-gradient(180deg,#f4f7fc 0%,#c4cfe0 50%,#8fa0bb 100%);
+  box-shadow:0 7px 0 #4d5d78,0 16px 22px rgba(0,0,0,.6),0 0 22px rgba(143,180,255,.25),inset 0 2px 0 rgba(255,255,255,.8),inset 0 -2px 4px rgba(0,0,0,.18)}
+.cbtn.mail .ico{background:rgba(11,18,32,.12)}
+.cbtn:hover{transform:translateZ(38px) translateY(-3px)}
+.cbtn:active{transform:translateZ(38px) translateY(5px)}
+.cbtn.wa:active{box-shadow:0 2px 0 #0d6a2b,0 6px 10px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.4)}
+.cbtn.mail:active{box-shadow:0 2px 0 #4d5d78,0 6px 10px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.6)}
+footer{padding:1.4rem var(--pad);border-top:1px solid var(--line);color:var(--mute);font-size:.92rem;display:flex;gap:1rem;justify-content:space-between;flex-wrap:wrap}
+
+/* lightbox */
+dialog{border:0;padding:0;background:transparent;max-width:96vw;max-height:94vh;margin:auto}
+dialog::backdrop{background:rgba(2,3,6,.92)}
+dialog img{max-width:94vw;max-height:90vh;width:auto;height:auto;border:3px solid;border-image:var(--sg) 1}
+dialog button{position:absolute;top:.3rem;right:.3rem;width:44px;height:44px;display:grid;place-items:center;padding:0;background:none;border:0;border-radius:0;color:#fff;cursor:pointer;filter:drop-shadow(0 0 3px rgba(0,0,0,.9)) drop-shadow(0 0 8px rgba(0,0,0,.7))}
+dialog button svg{width:26px;height:26px;stroke:currentColor;stroke-width:3;stroke-linecap:round;fill:none}
+dialog button:hover{color:var(--red)}
+
+@media(max-width:900px){
+  .why{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  .hero-grid,.profile,.disc-body,.project{grid-template-columns:1fr}
+  .aspects,.spec{position:static}
+  .gallery.wide,.project .gallery{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .project .gallery li:nth-child(n),.project .gallery li:last-child:nth-child(n),.project .gallery li:nth-last-child(2):nth-child(n){grid-column:auto;--ar:4/3}
+  .project .gallery li:last-child:nth-child(odd){grid-column:1/-1;--ar:21/9}
+  .portrait{justify-self:start}
+}
+@media(max-width:640px){
+  .duo{grid-template-columns:1fr}
+  .top nav{display:none}
+  .gallery{--gap:.6rem}
+  .why{grid-template-columns:1fr}
+  .biz{grid-template-columns:1fr;gap:0}
+  .biz dd{margin-bottom:.7rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .contact>img{animation:none}
+  .contact .person{transform:none!important}
+  html{scroll-behavior:auto}
+  .lightline{animation:none;width:100%}
+  .shot img{transition:none}
+  .flash,.bolt{display:none}
+}
+</style>
+</head>
+<body>
+<div class="stage" aria-hidden="true"><i class="flash"></i><svg class="bolt" viewBox="0 0 100 100" preserveAspectRatio="none"></svg></div>
+
+<header class="top">
+  <a class="brand" href="#atas"><img src="images/aled-logo.png" alt="Logo A+LED"><span>Lighting Designer Biography™</span></a>
+  <nav aria-label="Navigasi utama">
+    <ul>
+      <li><a href="#profil">Profil</a></li>
+      <li><a href="#toko">Toko &amp; Workshop</a></li>
+      <li><a href="#keahlian">Keahlian</a></li>
+      <li><a href="#proyek">Proyek</a></li>
+      <li><a href="#kenapa">Kenapa Kami</a></li>
+      <li><a href="#kontak">Kontak</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="atas">
+
+<div class="hero" id="hero">
+  <video id="heroVideo" autoplay muted loop playsinline poster="images/p01-07.jpg" aria-hidden="true"><source src="Videos/hero.mp4" type="video/mp4"></video>
+  <div class="beam" aria-hidden="true"></div>
+  <span class="hud tl"></span><span class="hud tr"></span><span class="hud bl"></span><span class="hud br"></span>
+  <img class="logo-big" src="images/aled-logo.png" alt="Logo A+LED">
+  <div class="hero-grid">
+    <div>
+      <p class="by">Design by :</p>
+      <h1><span class="r">A</span>lex Li<span class="r">e</span></h1>
+      <p class="lede">Lighting Designer, Lighting Engineering (Train by Profesional Panasonic Lighting Manufacture in Osaka, Japan 2014), Electrical Engineering</p>
+      <div class="support"><span>Team Support by :</span><img src="images/aled-logo.png" alt="A+LED"></div>
+    </div>
+    <figure class="hero-photo">
+      <img src="images/p01-07.jpg" alt="Tangga Gedung DPR/MPR RI dengan garis cahaya">
+      <figcaption>Gedung DPR/MPR RI, Senayan</figcaption>
+    </figure>
+  </div>
+  <div class="lightline" aria-hidden="true"></div>
+</div>
+
+<section id="galeri" aria-label="Galeri karya">
+  <div class="sec-head"><h2>Karya Alex Lie</h2></div>
+  <ul class="gallery wide">
+<li><button type="button" class="shot" data-full="images/p01-02.jpg" aria-label="Perbesar foto Karya Alex Lie 1"><span class="frame"><img src="images/p01-02.jpg" alt="Karya Alex Lie foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p01-03.jpg" aria-label="Perbesar foto Karya Alex Lie 2"><span class="frame"><img src="images/p01-03.jpg" alt="Karya Alex Lie foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p01-04.jpg" aria-label="Perbesar foto Karya Alex Lie 3"><span class="frame"><img src="images/p01-04.jpg" alt="Karya Alex Lie foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p01-05.jpg" aria-label="Perbesar foto Karya Alex Lie 4"><span class="frame"><img src="images/p01-05.jpg" alt="Karya Alex Lie foto 4" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p01-06.jpg" aria-label="Perbesar foto Karya Alex Lie 5"><span class="frame"><img src="images/p01-06.jpg" alt="Karya Alex Lie foto 5" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p01-07.jpg" aria-label="Perbesar foto Karya Alex Lie 6"><span class="frame"><img src="images/p01-07.jpg" alt="Karya Alex Lie foto 6" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p01-08.jpg" aria-label="Perbesar foto Karya Alex Lie 7"><span class="frame"><img src="images/p01-08.jpg" alt="Karya Alex Lie foto 7" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p01-09.jpg" aria-label="Perbesar foto Karya Alex Lie 8"><span class="frame"><img src="images/p01-09.jpg" alt="Karya Alex Lie foto 8" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p01-10.jpg" aria-label="Perbesar foto Karya Alex Lie 9"><span class="frame"><img src="images/p01-10.jpg" alt="Karya Alex Lie foto 9" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p01-11.jpg" aria-label="Perbesar foto Karya Alex Lie 10"><span class="frame"><img src="images/p01-11.jpg" alt="Karya Alex Lie foto 10" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p01-12.jpg" aria-label="Perbesar foto Karya Alex Lie 11"><span class="frame"><img src="images/p01-12.jpg" alt="Karya Alex Lie foto 11" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p01-13.jpg" aria-label="Perbesar foto Karya Alex Lie 12"><span class="frame"><img src="images/p01-13.jpg" alt="Karya Alex Lie foto 12" loading="lazy"></span></button></li>
+</ul>
+</section>
+
+<section id="profil">
+  <div class="profile">
+    <div>
+      <h2 class="name"><span class="r">A</span>lex Li<span class="r">e</span></h2>
+      <p class="roles">Lighting Designer, Lighting Engineering <small>(Train by Profesional Panasonic Lighting Manufacture in Osaka, Japan 2014)</small>, Electrical Engineering</p>
+      <h3>Other Expertise:</h3>
+      <ul>
+        <li>Digital Sound Engineering</li>
+        <li>Musician (Guitar Expert)</li>
+        <li>Composer and Arranger</li>
+      </ul>
+      <dl class="biz">
+        <dt>Owner Of Retail Business</dt><dd>: <span class="r">A</span>+LE<span class="r">D</span></dd>
+        <dt>CEO/Founder of</dt><dd>: <span class="r">B</span>usy <span class="r">B</span>eaver <span class="r">S</span>tudio<a class="ext" href="https://busybeaverstudio.com" target="_blank" rel="noopener noreferrer" aria-label="Buka busybeaverstudio.com (tab baru)" title="busybeaverstudio.com"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></dd>
+        <dt>CEO/Founder of</dt><dd>: <span class="r">F</span>n<span class="r">B</span> Fusio<span class="r">n</span><a class="ext" href="https://fnbfusion.web.id" target="_blank" rel="noopener noreferrer" aria-label="Buka fnbfusion.web.id (tab baru)" title="fnbfusion.web.id"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></dd>
+      </dl>
+      <p class="since">Sejak 2011 – Present</p>
+    </div>
+    <figure class="portrait"><div class="mat"><div class="pic"><img src="images/alex-lie-portrait.png" alt="Alex Lie, Lighting Designer" width="715" height="1073"></div><figcaption><span>Alex Lie</span></figcaption></div></figure>
+  </div>
+</section>
+
+<section id="toko">
+  <div class="sec-head"><h2>Kami memiliki Retail Bisnis dan Workshop</h2></div>
+  <div class="duo">
+    <div class="panel">
+      <h3>Alamat Toko A+LED</h3>
+      <address>Plaza Kenari Mas. Lt 3 Block J 106-108, Depan Lift H. Jl. Kramat Raya no 101, RW1, Paseban. Kec.Senen. Kota Jakarta Pusat. DKI Jakarta 10440</address>
+      <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p03-01.jpg" aria-label="Perbesar foto Toko A+LED 1"><span class="frame"><img src="images/p03-01.jpg" alt="Toko A+LED foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p03-02.jpg" aria-label="Perbesar foto Toko A+LED 2"><span class="frame"><img src="images/p03-02.jpg" alt="Toko A+LED foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p03-03.jpg" aria-label="Perbesar foto Toko A+LED 3"><span class="frame"><img src="images/p03-03.jpg" alt="Toko A+LED foto 3" loading="lazy"></span></button></li>
+</ul>
+    </div>
+    <div class="panel">
+      <h3>Alamat Workshop</h3>
+      <address>Jl. Mangga Besar XIII No. 2 RT. 05 RW.05 Kelurahan Mangga Dua Selatan Kec. Sawah Besar Kota Jakarta Pusat . DKI Jakarta 10730</address>
+      <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p03-04.jpg" aria-label="Perbesar foto Workshop 1"><span class="frame"><img src="images/p03-04.jpg" alt="Workshop foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p03-05.jpg" aria-label="Perbesar foto Workshop 2"><span class="frame"><img src="images/p03-05.jpg" alt="Workshop foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p03-06.jpg" aria-label="Perbesar foto Workshop 3"><span class="frame"><img src="images/p03-06.jpg" alt="Workshop foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p03-07.jpg" aria-label="Perbesar foto Workshop 4"><span class="frame"><img src="images/p03-07.jpg" alt="Workshop foto 4" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p03-08.jpg" aria-label="Perbesar foto Workshop 5"><span class="frame"><img src="images/p03-08.jpg" alt="Workshop foto 5" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p03-09.jpg" aria-label="Perbesar foto Workshop 6"><span class="frame"><img src="images/p03-09.jpg" alt="Workshop foto 6" loading="lazy"></span></button></li>
+</ul>
+    </div>
+  </div>
+</section>
+
+<section id="keahlian">
+  <div class="sec-head"><h2>Keahlian</h2></div>
+  
+<article class="disc" id="lighting-designer">
+  <header>
+    <h3><span class="r">L</span>ighting <span class="r">D</span>esigner :</h3>
+    <p class="def"><span class="ttl"></span> Adalah seorang professional yang secara khusus merancang strategi pencahayaan untuk suatu ruang atau bangunan, dengan mempertimbangkan berbagai aspek.</p>
+  </header>
+  <div class="disc-body">
+    <div class="aspects"><p>Aspek mencakup :</p><ul><li><strong>Fungsi</strong> : Memastikan Tingkat pencahayaan sesuai kebutuhan aktivitas.</li><li><strong>Estetika</strong> : Menciptakan suasana (mood) dan menonjolkan element arsitektur.</li><li><strong>Kesehatan</strong> : Mendukung kenyamanan visual dan ritme kebiasaan manusia.</li><li><strong>Efisiensi</strong> : Mengoptimalkan penggunaan energi dan biaya operational</li><li><strong>Integrasi</strong> : Menyelaraskan pencahayaan dengan system bangunan lainnya (arsitektur, interior, MEP)</li></ul></div>
+    <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p04-01.jpg" aria-label="Perbesar foto Lighting Designer 1"><span class="frame"><img src="images/p04-01.jpg" alt="Lighting Designer foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p04-02.jpg" aria-label="Perbesar foto Lighting Designer 2"><span class="frame"><img src="images/p04-02.jpg" alt="Lighting Designer foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p04-03.jpg" aria-label="Perbesar foto Lighting Designer 3"><span class="frame"><img src="images/p04-03.jpg" alt="Lighting Designer foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p04-04.jpg" aria-label="Perbesar foto Lighting Designer 4"><span class="frame"><img src="images/p04-04.jpg" alt="Lighting Designer foto 4" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p04-05.jpg" aria-label="Perbesar foto Lighting Designer 5"><span class="frame"><img src="images/p04-05.jpg" alt="Lighting Designer foto 5" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p04-06.jpg" aria-label="Perbesar foto Lighting Designer 6"><span class="frame"><img src="images/p04-06.jpg" alt="Lighting Designer foto 6" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p04-07.jpg" aria-label="Perbesar foto Lighting Designer 7"><span class="frame"><img src="images/p04-07.jpg" alt="Lighting Designer foto 7" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p04-08.jpg" aria-label="Perbesar foto Lighting Designer 8"><span class="frame"><img src="images/p04-08.jpg" alt="Lighting Designer foto 8" loading="lazy"></span></button></li>
+</ul>
+  </div>
+</article>
+  
+<article class="disc" id="lighting-engineering">
+  <header>
+    <h3><span class="r">L</span>ighting <span class="r">E</span>ngineering :</h3>
+    <p class="def"><span class="ttl"></span> Adalah ilmu tehnik yang berfokus pada aspek Kuantitatif, Teknis dan Fisik dari sistem pencahayaan. Seorang lighting engineer membuat dan merancang lampu design menjadi nyata dan memastikan bahwa desain pencahayaan tidak hanya indah secara visual, tetapi juga mencakup beberapa aspek penting.</p>
+  </header>
+  <div class="disc-body">
+    <div class="aspects"><p>Aspek mencakup :</p><ul><li>Memenuhi Standar teknis (Tingkat pencahayaan, keseragaman dan penyamanan)</li><li>Efisien secara energi (konsumsi Listrik yang optimal)</li><li>Andal secara operational (system control, integrasi, keandalan komponen)</li><li>Aman secara instalasi (sesuai regulasi kelistrikan)</li></ul></div>
+    <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p05-01.jpg" aria-label="Perbesar foto Lighting Engineering 1"><span class="frame"><img src="images/p05-01.jpg" alt="Lighting Engineering foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p05-02.jpg" aria-label="Perbesar foto Lighting Engineering 2"><span class="frame"><img src="images/p05-02.jpg" alt="Lighting Engineering foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p05-03.jpg" aria-label="Perbesar foto Lighting Engineering 3"><span class="frame"><img src="images/p05-03.jpg" alt="Lighting Engineering foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p05-04.jpg" aria-label="Perbesar foto Lighting Engineering 4"><span class="frame"><img src="images/p05-04.jpg" alt="Lighting Engineering foto 4" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p05-05.jpg" aria-label="Perbesar foto Lighting Engineering 5"><span class="frame"><img src="images/p05-05.jpg" alt="Lighting Engineering foto 5" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p05-06.jpg" aria-label="Perbesar foto Lighting Engineering 6"><span class="frame"><img src="images/p05-06.jpg" alt="Lighting Engineering foto 6" loading="lazy"></span></button></li>
+</ul>
+  </div>
+</article>
+  
+<article class="disc" id="electrical-engineering">
+  <header>
+    <h3><span class="r">E</span>lectrical <span class="r">E</span>ngineering :</h3>
+    <p class="def"><span class="ttl"></span> Adalah cabang ilmu dalam pencahayaan yang berfokus pada aspek kelistrikan, distribusi daya, proteksi dan keandalan system dari seluruh instalasi pencahayaan. Seorang electrical engineer (atau MEP engineer) memastikan aspek penting seperti :</p>
+  </header>
+  <div class="disc-body">
+    <div class="aspects"><p>Aspek mencakup :</p><ul><li>Sistem pencahayaan yang mendapatkan pasokan daya yang stabil dan aman.</li><li>Instalasi memenuhi standart keselamatan kelistrikan (PUIL, SNI dan NFPA).</li><li>Seluruh komponen terproteksi dari gangguan (short circuit, overload dan surge).</li><li>Sistem dapat dioperasikan, dipelihara dan dikembangkan dengan mudah.</li></ul></div>
+    <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p06-01.jpg" aria-label="Perbesar foto Electrical Engineering 1"><span class="frame"><img src="images/p06-01.jpg" alt="Electrical Engineering foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p06-02.jpg" aria-label="Perbesar foto Electrical Engineering 2"><span class="frame"><img src="images/p06-02.jpg" alt="Electrical Engineering foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p06-03.jpg" aria-label="Perbesar foto Electrical Engineering 3"><span class="frame"><img src="images/p06-03.jpg" alt="Electrical Engineering foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p06-04.jpg" aria-label="Perbesar foto Electrical Engineering 4"><span class="frame"><img src="images/p06-04.jpg" alt="Electrical Engineering foto 4" loading="lazy" style="object-position:50% 38%"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p06-05.jpg" aria-label="Perbesar foto Electrical Engineering 5"><span class="frame"><img src="images/p06-05.jpg" alt="Electrical Engineering foto 5" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p06-06.jpg" aria-label="Perbesar foto Electrical Engineering 6"><span class="frame"><img src="images/p06-06.jpg" alt="Electrical Engineering foto 6" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p06-07.jpg" aria-label="Perbesar foto Electrical Engineering 7"><span class="frame"><img src="images/p06-07.jpg" alt="Electrical Engineering foto 7" loading="lazy"></span></button></li>
+</ul>
+  </div>
+</article>
+</section>
+
+<section id="proyek">
+  <div class="sec-head"><h2>Proyek</h2></div>
+  
+<article class="project" id="lyma">
+  <div class="spec">
+    <h3>LYMA Club</h3>
+    <p class="where">Jayapura – Papua</p>
+    <p class="year">2025</p>
+    <dl>
+      <dt>Sebagai</dt><dd>Designer Lighting, Instalasi dan Pemograman Lighting</dd>
+      <dt>Jenis Lampu</dt><dd><ul><li>SW-C380 PAR Head RGB 6unit</li><li>HZ 1500 Smoke 2unit</li><li>SW-L4000 Laser RGB 2unit</li><li>SW-C220 Moving Head RGB 12unit</li><li>SW-C830 Moving Head Focus 8unit</li></ul></dd>
+    </dl>
+    <p class="scope">Interior Club Lighting</p>
+  </div>
+  <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p15-01.jpg" aria-label="Perbesar foto LYMA Club 1"><span class="frame"><img src="images/p15-01.jpg" alt="LYMA Club foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p15-02.jpg" aria-label="Perbesar foto LYMA Club 2"><span class="frame"><img src="images/p15-02.jpg" alt="LYMA Club foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p15-03.jpg" aria-label="Perbesar foto LYMA Club 3"><span class="frame"><img src="images/p15-03.jpg" alt="LYMA Club foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p15-04.jpg" aria-label="Perbesar foto LYMA Club 4"><span class="frame"><img src="images/p15-04.jpg" alt="LYMA Club foto 4" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p15-05.jpg" aria-label="Perbesar foto LYMA Club 5"><span class="frame"><img src="images/p15-05.jpg" alt="LYMA Club foto 5" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p15-06.jpg" aria-label="Perbesar foto LYMA Club 6"><span class="frame"><img src="images/p15-06.jpg" alt="LYMA Club foto 6" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p15-07.jpg" aria-label="Perbesar foto LYMA Club 7"><span class="frame"><img src="images/p15-07.jpg" alt="LYMA Club foto 7" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p15-08.jpg" aria-label="Perbesar foto LYMA Club 8"><span class="frame"><img src="images/p15-08.jpg" alt="LYMA Club foto 8" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p15-09.jpg" aria-label="Perbesar foto LYMA Club 9"><span class="frame"><img src="images/p15-09.jpg" alt="LYMA Club foto 9" loading="lazy"></span></button></li>
+</ul>
+</article>
+<article class="project" id="disdukcapil">
+  <div class="spec">
+    <h3>Gedung Dinas Kependudukan dan Catatan Sipil</h3>
+    <p class="where">Balik Papan - Kalimantan Timur</p>
+    <p class="year">2025</p>
+    <dl>
+      <dt>Sebagai</dt><dd>Designer Lighting, Pengadaan dan Supervisi.</dd>
+      <dt>Jenis Lampu</dt><dd><ul><li>Linear RGB 24V DC DMX Ip65 100cm 12w/mtr (460pcs)</li></ul></dd>
+    </dl>
+    <p class="scope">Facade Gedung</p>
+  </div>
+  <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p08-01.jpg" aria-label="Perbesar foto Gedung Dinas Kependudukan dan Catatan Sipil 1"><span class="frame"><img src="images/p08-01.jpg" alt="Gedung Dinas Kependudukan dan Catatan Sipil foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p08-02.jpg" aria-label="Perbesar foto Gedung Dinas Kependudukan dan Catatan Sipil 2"><span class="frame"><img src="images/p08-02.jpg" alt="Gedung Dinas Kependudukan dan Catatan Sipil foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p08-03.jpg" aria-label="Perbesar foto Gedung Dinas Kependudukan dan Catatan Sipil 3"><span class="frame"><img src="images/p08-03.jpg" alt="Gedung Dinas Kependudukan dan Catatan Sipil foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p08-04.jpg" aria-label="Perbesar foto Gedung Dinas Kependudukan dan Catatan Sipil 4"><span class="frame"><img src="images/p08-04.jpg" alt="Gedung Dinas Kependudukan dan Catatan Sipil foto 4" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p08-05.jpg" aria-label="Perbesar foto Gedung Dinas Kependudukan dan Catatan Sipil 5"><span class="frame"><img src="images/p08-05.jpg" alt="Gedung Dinas Kependudukan dan Catatan Sipil foto 5" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p08-06.jpg" aria-label="Perbesar foto Gedung Dinas Kependudukan dan Catatan Sipil 6"><span class="frame"><img src="images/p08-06.jpg" alt="Gedung Dinas Kependudukan dan Catatan Sipil foto 6" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p08-07.jpg" aria-label="Perbesar foto Gedung Dinas Kependudukan dan Catatan Sipil 7"><span class="frame"><img src="images/p08-07.jpg" alt="Gedung Dinas Kependudukan dan Catatan Sipil foto 7" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p08-08.jpg" aria-label="Perbesar foto Gedung Dinas Kependudukan dan Catatan Sipil 8"><span class="frame"><img src="images/p08-08.jpg" alt="Gedung Dinas Kependudukan dan Catatan Sipil foto 8" loading="lazy"></span></button></li>
+</ul>
+</article>
+<article class="project" id="elraja">
+  <div class="spec">
+    <h3>EL RAJA CLUB &amp; KTV</h3>
+    <p class="where">Karawang – Jawa Barat</p>
+    <p class="year">2024</p>
+    <dl>
+      <dt>Sebagai</dt><dd>Designer Lighting, Instalasi dan Pemograman Lighting Content</dd>
+      <dt>Jenis Lampu</dt><dd><ul><li>Led Strip DMX RGB 24V DC 30 pixel/m IP20 (435mtr)</li><li>Moving Head Beam, Par RGB, Laser head (18pcs combination)</li></ul></dd>
+    </dl>
+    <p class="scope">Interior Club Lighting</p>
+  </div>
+  <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p11-01.jpg" aria-label="Perbesar foto EL RAJA CLUB & KTV 1"><span class="frame"><img src="images/p11-01.jpg" alt="EL RAJA CLUB &amp; KTV foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p11-02.jpg" aria-label="Perbesar foto EL RAJA CLUB & KTV 2"><span class="frame"><img src="images/p11-02.jpg" alt="EL RAJA CLUB &amp; KTV foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p11-03.jpg" aria-label="Perbesar foto EL RAJA CLUB & KTV 3"><span class="frame"><img src="images/p11-03.jpg" alt="EL RAJA CLUB &amp; KTV foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p11-04.jpg" aria-label="Perbesar foto EL RAJA CLUB & KTV 4"><span class="frame"><img src="images/p11-04.jpg" alt="EL RAJA CLUB &amp; KTV foto 4" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p11-05.jpg" aria-label="Perbesar foto EL RAJA CLUB & KTV 5"><span class="frame"><img src="images/p11-05.jpg" alt="EL RAJA CLUB &amp; KTV foto 5" loading="lazy"></span></button></li>
+</ul>
+</article>
+<article class="project" id="winone">
+  <div class="spec">
+    <h3>Win One Club</h3>
+    <p class="where">Pontianak – Kalimantan Barat</p>
+    <p class="year">2023</p>
+    <dl>
+      <dt>Sebagai</dt><dd>Designer Lighting, Instalasi dan Pemograman Lighting</dd>
+      <dt>Jenis Lampu</dt><dd><ul><li>Led Strip WS2815 RGB 24V DC 30 pixel/m IP20 (960mtr)</li><li>Modul RGB Led 12V DC (420pcs)</li></ul></dd>
+    </dl>
+    <p class="scope">Interior Club Lighting</p>
+  </div>
+  <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p14-01.jpg" aria-label="Perbesar foto Win One Club 1"><span class="frame"><img src="images/p14-01.jpg" alt="Win One Club foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p14-02.jpg" aria-label="Perbesar foto Win One Club 2"><span class="frame"><img src="images/p14-02.jpg" alt="Win One Club foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p14-03.jpg" aria-label="Perbesar foto Win One Club 3"><span class="frame"><img src="images/p14-03.jpg" alt="Win One Club foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p14-04.jpg" aria-label="Perbesar foto Win One Club 4"><span class="frame"><img src="images/p14-04.jpg" alt="Win One Club foto 4" loading="lazy"></span></button></li>
+</ul>
+</article>
+<article class="project" id="numars">
+  <div class="spec">
+    <h3>Nu Mars</h3>
+    <p class="where">Pondok Indah – Jakarta Selatan</p>
+    <p class="year">2023</p>
+    <dl>
+      <dt>Sebagai</dt><dd>Designer Lighting, Instalasi dan Pemograman Lighting</dd>
+      <dt>Jenis Lampu</dt><dd><ul><li>Neon Flex DMX RGB 24V DC 30 pixel/m IP20 (420mtr)</li></ul></dd>
+    </dl>
+    <p class="scope">Interior Club Lighting</p>
+  </div>
+  <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p13-01.jpg" aria-label="Perbesar foto Nu Mars 1"><span class="frame"><img src="images/p13-01.jpg" alt="Nu Mars foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p13-02.jpg" aria-label="Perbesar foto Nu Mars 2"><span class="frame"><img src="images/p13-02.jpg" alt="Nu Mars foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p13-03.jpg" aria-label="Perbesar foto Nu Mars 3"><span class="frame"><img src="images/p13-03.jpg" alt="Nu Mars foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p13-04.jpg" aria-label="Perbesar foto Nu Mars 4"><span class="frame"><img src="images/p13-04.jpg" alt="Nu Mars foto 4" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p13-05.jpg" aria-label="Perbesar foto Nu Mars 5"><span class="frame"><img src="images/p13-05.jpg" alt="Nu Mars foto 5" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p13-06.jpg" aria-label="Perbesar foto Nu Mars 6"><span class="frame"><img src="images/p13-06.jpg" alt="Nu Mars foto 6" loading="lazy"></span></button></li>
+</ul>
+</article>
+<article class="project" id="telkom">
+  <div class="spec">
+    <h3>Telkom Indonesia</h3>
+    <p class="where">Bandung – Jawa Barat</p>
+    <p class="year">2023</p>
+    <dl>
+      <dt>Sebagai</dt><dd>Designer Lighting, Instalasi dan Pemograman Lighting</dd>
+      <dt>Jenis Lampu</dt><dd><ul><li>Led Strip WS2815 RGB 12V DC 60 pixel/m IP20 (360mtr)</li></ul></dd>
+    </dl>
+    <p class="scope">Interior Office Lighting</p>
+  </div>
+  <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p12-01.jpg" aria-label="Perbesar foto Telkom Indonesia 1"><span class="frame"><img src="images/p12-01.jpg" alt="Telkom Indonesia foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p12-02.jpg" aria-label="Perbesar foto Telkom Indonesia 2"><span class="frame"><img src="images/p12-02.jpg" alt="Telkom Indonesia foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p12-03.jpg" aria-label="Perbesar foto Telkom Indonesia 3"><span class="frame"><img src="images/p12-03.jpg" alt="Telkom Indonesia foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p12-04.jpg" aria-label="Perbesar foto Telkom Indonesia 4"><span class="frame"><img src="images/p12-04.jpg" alt="Telkom Indonesia foto 4" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p12-05.jpg" aria-label="Perbesar foto Telkom Indonesia 5"><span class="frame"><img src="images/p12-05.jpg" alt="Telkom Indonesia foto 5" loading="lazy"></span></button></li>
+</ul>
+</article>
+<article class="project" id="kejagung">
+  <div class="spec">
+    <h3>Gedung Kejaksaan Agung</h3>
+    <p class="where">DKI Jakarta - BlokM</p>
+    <p class="year">2022</p>
+    <dl>
+      <dt>Sebagai</dt><dd>Pengadaan Material Lampu</dd>
+      <dt>Jenis Lampu</dt><dd><ul><li>Linear RGB 24V DC DMX Ip65 100cm 12w/mtr (450pcs)</li><li>Wallwasher RGB 24V DC DMX Ip65 100cm 18w/mtr (1300pcs)</li></ul></dd>
+    </dl>
+    <p class="scope">Facade Keliling Gedung</p>
+  </div>
+  <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p09-01.jpg" aria-label="Perbesar foto Gedung Kejaksaan Agung 1"><span class="frame"><img src="images/p09-01.jpg" alt="Gedung Kejaksaan Agung foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p09-02.jpg" aria-label="Perbesar foto Gedung Kejaksaan Agung 2"><span class="frame"><img src="images/p09-02.jpg" alt="Gedung Kejaksaan Agung foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p09-03.jpg" aria-label="Perbesar foto Gedung Kejaksaan Agung 3"><span class="frame"><img src="images/p09-03.jpg" alt="Gedung Kejaksaan Agung foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p09-04.jpg" aria-label="Perbesar foto Gedung Kejaksaan Agung 4"><span class="frame"><img src="images/p09-04.jpg" alt="Gedung Kejaksaan Agung foto 4" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p09-05.jpg" aria-label="Perbesar foto Gedung Kejaksaan Agung 5"><span class="frame"><img src="images/p09-05.jpg" alt="Gedung Kejaksaan Agung foto 5" loading="lazy"></span></button></li>
+</ul>
+</article>
+<article class="project" id="phoenix">
+  <div class="spec">
+    <h3>Phoenix CLub</h3>
+    <p class="where">Bali - Kuta</p>
+    <p class="year">2021</p>
+    <dl>
+      <dt>Sebagai</dt><dd>Designer Lighting dan Instalasi</dd>
+      <dt>Jenis Lampu</dt><dd><ul><li>Pixel Light 1,5cm 24V DMX RGB IP65 Outdoor (960pcs)</li></ul></dd>
+    </dl>
+    <p class="scope">Logo Facade Phoenix Club</p>
+  </div>
+  <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p10-01.jpg" aria-label="Perbesar foto Phoenix CLub 1"><span class="frame"><img src="images/p10-01.jpg" alt="Phoenix CLub foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p10-02.jpg" aria-label="Perbesar foto Phoenix CLub 2"><span class="frame"><img src="images/p10-02.jpg" alt="Phoenix CLub foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p10-03.jpg" aria-label="Perbesar foto Phoenix CLub 3"><span class="frame"><img src="images/p10-03.jpg" alt="Phoenix CLub foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p10-04.jpg" aria-label="Perbesar foto Phoenix CLub 4"><span class="frame"><img src="images/p10-04.jpg" alt="Phoenix CLub foto 4" loading="lazy"></span></button></li>
+</ul>
+</article>
+<article class="project" id="dpr">
+  <div class="spec">
+    <h3>Gedung  DPR/MPR RI</h3>
+    <p class="where">DKI Jakarta,Senayan</p>
+    <p class="year">2019</p>
+    <dl>
+      <dt>Sebagai</dt><dd>Designer Lighting, Pengadaan dan Instalasi.</dd>
+      <dt>Jenis Lampu</dt><dd><ul><li>Neon Flex 8w/m 3000K 220V DC IP65 8mm Outdoor (2900mtr)</li><li>Flood Light RGB 1500 Watt</li><li>Double Head Panel (12set)</li></ul></dd>
+    </dl>
+    <p class="scope">Mencakup Gedung Paripurna, Gedung Nusantara 2, Gedung MPR</p>
+  </div>
+  <ul class="gallery ">
+<li><button type="button" class="shot" data-full="images/p07-01.jpg" aria-label="Perbesar foto Gedung DPR/MPR RI 1"><span class="frame"><img src="images/p07-01.jpg" alt="Gedung DPR/MPR RI foto 1" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p07-02.jpg" aria-label="Perbesar foto Gedung DPR/MPR RI 2"><span class="frame"><img src="images/p07-02.jpg" alt="Gedung DPR/MPR RI foto 2" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p07-03.jpg" aria-label="Perbesar foto Gedung DPR/MPR RI 3"><span class="frame"><img src="images/p07-03.jpg" alt="Gedung DPR/MPR RI foto 3" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p07-04.jpg" aria-label="Perbesar foto Gedung DPR/MPR RI 4"><span class="frame"><img src="images/p07-04.jpg" alt="Gedung DPR/MPR RI foto 4" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p07-05.jpg" aria-label="Perbesar foto Gedung DPR/MPR RI 5"><span class="frame"><img src="images/p07-05.jpg" alt="Gedung DPR/MPR RI foto 5" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p07-06.jpg" aria-label="Perbesar foto Gedung DPR/MPR RI 6"><span class="frame"><img src="images/p07-06.jpg" alt="Gedung DPR/MPR RI foto 6" loading="lazy"></span></button></li>
+<li><button type="button" class="shot" data-full="images/p07-07.jpg" aria-label="Perbesar foto Gedung DPR/MPR RI 7"><span class="frame"><img src="images/p07-07.jpg" alt="Gedung DPR/MPR RI foto 7" loading="lazy"></span></button></li>
+</ul>
+</article>
+</section>
+
+<section id="kenapa">
+  <div class="sec-head"><h2>Kenapa Memilih Kami ?</h2></div>
+  <div class="why">
+    <div class="panel"><h3>Smart Lighting System</h3><p>Dimana project yang kami kerjakan selalu up to date dan digitalisasi dgn perkembangan tehnologi system yang automation sesuai dengan kebutuhan client kami.</p></div>
+    <div class="panel"><h3>Technical Expertise</h3><p>Team yang mengerti arsitektur, interior dan kelistrikan</p></div>
+    <div class="panel"><h3>Product Quality</h3><p>Hanya menggunakan material dengan sertifikasi CE atau ROHS dengan memiliki Garansi Product 1 sampai 3 Tahun.</p></div>
+    <div class="panel"><h3>After Sales Service</h3><p>Dukungan pemeliharaan dan garansi purna jual yang responsif</p></div>
+    <div class="panel wide"><h3>Portofolio</h3><p>Terbukti dengan proyek proyek kami yang telah sukses kami kerjakan</p></div>
+  </div>
+</section>
+
+<section id="kontak" class="contact">
+  <img src="images/aled-logo.png" alt="Logo A+LED" width="220">
+  <h2>TERIMA KASIH</h2>
+  <p class="cta-line">KAMI SIAP MENERANGI PROYEK ANDA BERIKUTNYA</p>
+  <div class="person" id="person">
+    <p class="cp-title">Contact Person</p>
+    <a class="cbtn wa" href="https://wa.me/6281973028349" target="_blank" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></span><span><small>Admin &middot; WhatsApp</small><b>0819 7302 8349</b></span></a>
+    <a class="cbtn mail" href="mailto:Benuamas3@gmail.com"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V6a1 1 0 011-1zm9 7.2L4.6 7H4v.4l8 5.6 8-5.6V7h-.6L12 12.2z"/></svg></span><span><small>Email</small><b>Benuamas3@gmail.com</b></span></a>
+  </div>
+</section>
+
+</main>
+
+<footer><span>Design by : Alex Lie</span><span>Team Support by : A+LED</span></footer>
+
+<dialog id="lb" aria-label="Foto diperbesar"><img id="lbImg" alt=""><button type="button" id="lbClose" aria-label="Tutup"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button></dialog>
+
+<script>
+(function(){
+  var hero=document.getElementById('hero');
+  hero.addEventListener('pointermove',function(e){
+    var r=hero.getBoundingClientRect();
+    hero.style.setProperty('--mx',(e.clientX-r.left)+'px');
+    hero.style.setProperty('--my',(e.clientY-r.top)+'px');
+  });
+  var v=document.getElementById('heroVideo');
+  function hideVideo(){v.style.display='none';}
+  v.addEventListener('error',hideVideo);
+  v.querySelector('source').addEventListener('error',hideVideo);
+  var lb=document.getElementById('lb'),img=document.getElementById('lbImg');
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.shot');
+    if(b){img.src=b.dataset.full;img.alt=b.querySelector('img').alt;lb.showModal();}
+    else if(e.target===lb){lb.close();}
+  });
+
+  /* petir: sambaran menggelegar */
+  (function(){
+    if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    var fl=document.querySelector('.flash'),bt=document.querySelector('.bolt');
+    if(!fl||!bt)return;
+    var NS='http://www.w3.org/2000/svg';
+    function R(a,b){return a+Math.random()*(b-a);}
+    function line(pts,cls){var e=document.createElementNS(NS,'polyline');e.setAttribute('class',cls);e.setAttribute('points',pts.join(' '));bt.appendChild(e);}
+    function path(x,y,maxY,jit,step){var pts=[x.toFixed(1)+','+y.toFixed(1)];while(y<maxY){y+=R(step*.6,step*1.3);x+=R(-jit,jit);pts.push(x.toFixed(1)+','+y.toFixed(1));}return pts;}
+    function build(big){
+      while(bt.firstChild)bt.removeChild(bt.firstChild);
+      var x=R(15,85),y=0,pts=[x.toFixed(1)+',0'],marks=[],n=0,maxY=big?R(80,100):R(55,80);
+      while(y<maxY){y+=R(5,11);x+=R(-10,10);pts.push(x.toFixed(1)+','+y.toFixed(1));n++;if(n>2&&Math.random()<.45)marks.push([x,y]);}
+      line(pts,'main');
+      var cnt=big?Math.min(marks.length,4):Math.min(marks.length,2);
+      for(var i=0;i<cnt;i++){var m=marks[i];var d=Math.random()<.5?-1:1;
+        var bp=[m[0].toFixed(1)+','+m[1].toFixed(1)],bx=m[0],by=m[1],L=R(3,6)|0;
+        for(var k=0;k<L;k++){bx+=d*R(3,9);by+=R(5,10);bp.push(bx.toFixed(1)+','+by.toFixed(1));}
+        line(bp,'br');}
+      fl.style.setProperty('--fx',pts[0].split(',')[0]+'%');
+    }
+    function on(v){fl.classList.toggle('on',v);bt.classList.toggle('on',v);}
+    function strike(){
+      if(document.hidden){return next();}
+      /* sambaran pembuka kecil, lalu sambaran utama besar, lalu gema */
+      build(false);on(true);
+      setTimeout(function(){on(false);},80);
+      setTimeout(function(){build(true);on(true);},330);
+      setTimeout(function(){on(false);},620);
+      if(Math.random()<.6){setTimeout(function(){build(true);on(true);},1000);setTimeout(function(){on(false);},1160);}
+      next();
+    }
+    function next(){setTimeout(strike,R(5000,10000));}
+    setTimeout(strike,1800);
+  })();
+  /* tilt 3D kartu kontak */
+  (function(){
+    var c=document.getElementById('person');
+    if(!c||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))return;
+    c.addEventListener('pointermove',function(e){
+      var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+      c.style.setProperty('--ry',(x*12).toFixed(1)+'deg');c.style.setProperty('--rx',(-y*10).toFixed(1)+'deg');
+    });
+    c.addEventListener('pointerleave',function(){c.style.setProperty('--ry','0deg');c.style.setProperty('--rx','0deg');});
+  })();
+  /* proteksi konten: blok klik kanan, salin, drag, dan pintasan simpan */
+  (function(){
+    function stop(e){e.preventDefault();return false;}
+    ['contextmenu','copy','cut','dragstart','selectstart'].forEach(function(t){document.addEventListener(t,stop,true);});
+    document.addEventListener('keydown',function(e){
+      var k=(e.key||'').toLowerCase();
+      if((e.ctrlKey||e.metaKey)&&['s','c','x','a','u','p'].indexOf(k)>-1){e.preventDefault();}
+    },true);
+    function lock(){[].forEach.call(document.images,function(i){i.setAttribute('draggable','false');});}
+    lock();document.addEventListener('DOMContentLoaded',lock);
+  })();
+  document.getElementById('lbClose').addEventListener('click',function(){lb.close();});
+})();
+</script>
+</body>
+</html>
